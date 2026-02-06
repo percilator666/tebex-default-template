@@ -1,0 +1,31 @@
+{# Popup mode (only render .site container when true) #}
+{% set isPopup = query('popup') != null %}
+
+{% set toastText = page.message.display ? page.message.text : '' %}
+
+{% set packageImageDefault = '/assets/img/empty.png' %}
+
+{% set isNavigationVertical = config('nav-style') == 'Vertical Nav in Sidebar' %}
+{% set navClass = isNavigationVertical ? 'is-navigation-vertical ' : 'is-navigation-horizontal ' %}
+{% set sidebarClass = config('sidebar-position') == 'Right' ? 'is-sidebar-right ' : '' %}
+{% set homeCategoriesClass = config('home-categories') == 'On' ? 'home-categories-enabled ' : '' %}
+
+{% set bodyClassStr = navClass ~ sidebarClass ~ homeCategoriesClass %}
+
+{% if isPopup == false %}
+  {% include "head.twig" %}
+  <body class="{{ bodyClassStr }}{{ block('bodyClass') }}">
+    <div class="site" data-toast="{{ toastText }}">
+      {% include "header.twig" %}
+
+      {{ block('content') }}
+
+      {% include "footer.twig" %}
+    </div>
+  </body>
+  </html>
+{% else %}
+  <div class="site" data-toast="{{ toastText }}">
+    {{ block('content') }}
+  </div>
+{% endif %}
